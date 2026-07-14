@@ -1,0 +1,8 @@
+.DS_Store
+*.tar
+*.tar.gz
+.idea/
+.vscode/
+node_modules/
+control-ui/node_modules/
+*.log

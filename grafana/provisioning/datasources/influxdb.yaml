@@ -1,0 +1,18 @@
+# Provisioned InfluxQL datasource — Site Steward's in-container InfluxDB 1.8.
+# All services (Mosquitto, Influx, Telegraf, Grafana) run in the same
+# container, so Grafana reaches Influx over 127.0.0.1 — no host-gateway needed.
+apiVersion: 1
+
+datasources:
+  - name: esphome
+    uid: esphome_influxdb
+    type: influxdb
+    access: proxy
+    url: http://127.0.0.1:8086
+    database: esphome
+    isDefault: true
+    jsonData:
+      httpMode: GET
+      keepCookies: []
+    version: 1
+    editable: true

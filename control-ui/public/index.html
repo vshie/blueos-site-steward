@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Site Steward</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <div>
+        <h1>Site Steward</h1>
+        <p class="brand-sub">MQTT hub, history, controls, and trends — one extension</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <span id="time-status" class="pill pill-unknown" title="Where the Pi gets accurate time">Clock: —</span>
+      <span id="mqtt-status" class="pill pill-unknown" title="Steward portal ↔ Mosquitto broker inside this container. Not the browser WebSocket.">Mailbox: connecting…</span>
+      <a id="grafana-link" class="btn btn-secondary" href="#" target="_blank" rel="noopener">Full graphs ↗</a>
+    </div>
+  </header>
+
+  <nav class="tabbar" role="tablist" aria-label="Site Steward sections">
+    <button type="button" class="tab is-active" role="tab" data-tab="controls" id="tab-controls" aria-selected="true">Controls</button>
+    <button type="button" class="tab" role="tab" data-tab="system" id="tab-system" aria-selected="false">System</button>
+    <button type="button" class="tab" role="tab" data-tab="graphs" id="tab-graphs" aria-selected="false">Graphs</button>
+  </nav>
+
+  <main id="app">
+    <section class="tab-panel is-active" id="panel-controls" role="tabpanel" aria-labelledby="tab-controls">
+      <section class="overview panel">
+        <h2>What's on this tab</h2>
+        <div class="flow" aria-hidden="true">
+          <svg viewBox="0 0 860 150" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="#0d7a6f"/>
+              </marker>
+            </defs>
+            <rect x="20" y="25" width="170" height="100" rx="14" fill="#e6f4f2" stroke="#0d7a6f" stroke-width="2"/>
+            <text x="105" y="58" text-anchor="middle" font-size="14" font-weight="700" fill="#14201c">ESP Boards</text>
+            <text x="105" y="82" text-anchor="middle" font-size="12" fill="#5a6b64">relays · sensors · clock</text>
+            <rect x="55" y="96" width="24" height="12" rx="2" fill="#0d7a6f"/>
+            <rect x="87" y="96" width="24" height="12" rx="2" fill="#0d7a6f"/>
+            <rect x="119" y="96" width="24" height="12" rx="2" fill="#24352f" opacity=".35"/>
+
+            <line x1="190" y1="75" x2="250" y2="75" stroke="#0d7a6f" stroke-width="2.5" marker-end="url(#arr)"/>
+            <text x="220" y="62" text-anchor="middle" font-size="11" fill="#0d7a6f" font-weight="600">messages</text>
+
+            <rect x="255" y="25" width="200" height="100" rx="14" fill="#14201c"/>
+            <text x="355" y="62" text-anchor="middle" font-size="14" font-weight="700" fill="#e6f4f2">Site Steward</text>
+            <text x="355" y="86" text-anchor="middle" font-size="12" fill="#9bb5ad">switches · schedules</text>
+            <text x="355" y="106" text-anchor="middle" font-size="12" fill="#9bb5ad">live readings</text>
+
+            <line x1="455" y1="75" x2="515" y2="75" stroke="#0d7a6f" stroke-width="2.5" marker-end="url(#arr)"/>
+
+            <rect x="520" y="25" width="150" height="100" rx="14" fill="#fff4e5" stroke="#b86a00" stroke-width="2"/>
+            <text x="595" y="70" text-anchor="middle" font-size="14" font-weight="700" fill="#14201c">History</text>
+            <text x="595" y="94" text-anchor="middle" font-size="12" fill="#5a6b64">Graphs tab</text>
+
+            <line x1="670" y1="75" x2="720" y2="75" stroke="#0d7a6f" stroke-width="2.5" marker-end="url(#arr)"/>
+
+            <rect x="725" y="35" width="115" height="80" rx="14" fill="#e8eef5" stroke="#3a5f8a" stroke-width="2"/>
+            <text x="782" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#14201c">Operator</text>
+          </svg>
+        </div>
+        <div class="board-summary">
+          <h3>ESP Boards</h3>
+          <p class="board-summary-help">
+            Boards appear automatically when they publish under the site mailbox.
+            Add another in <strong>ESPHome Site</strong> (YAML → flash), then it shows up here and in history.
+          </p>
+          <ul id="esp-board-list" class="board-list"></ul>
+        </div>
+        <ul class="howto">
+          <li><strong>Switches</strong> — tap to turn a relay on or off right now (manual override).</li>
+          <li><strong>Daily schedule</strong> — enable an on-window; the board's clock runs it even if this page is closed.</li>
+          <li><strong>Graphs tab</strong> — past values from Steward's built-in history (not for flipping switches).</li>
+        </ul>
+      </section>
+
+      <p id="empty-state" class="empty-state" hidden>
+        No ESP boards found yet. Power an ESP32 on the same Wi‑Fi as the Pi.
+        If it's new, set it up under <strong>ESPHome Site</strong>, then come back —
+        boards appear here automatically when they send messages.
+      </p>
+      <div id="devices"></div>
+    </section>
+
+    <section class="tab-panel" id="panel-system" role="tabpanel" aria-labelledby="tab-system" hidden>
+      <section class="panel">
+        <h2>Runtime status</h2>
+        <p class="brand-sub" style="margin:.15rem 0 1rem">Health of the broker, history store, agent, and time source inside this container.</p>
+        <div class="status-grid">
+          <div class="stat">
+            <div class="label">Portal ↔ MQTT</div>
+            <div class="value"><span class="dot" id="sys-mqtt-dot"></span><span id="sys-mqtt-label">checking…</span></div>
+          </div>
+          <div class="stat">
+            <div class="label">InfluxDB</div>
+            <div class="value"><span class="dot" id="sys-influx-dot"></span><span id="sys-influx-label">checking…</span></div>
+          </div>
+          <div class="stat">
+            <div class="label">Telegraf → Influx</div>
+            <div class="value"><span class="dot" id="sys-telegraf-dot"></span><span id="sys-telegraf-label">—</span></div>
+          </div>
+          <div class="stat">
+            <div class="label">Time source</div>
+            <div class="value"><span class="dot" id="sys-time-dot"></span><span id="sys-time-label">—</span></div>
+          </div>
+          <div class="stat">
+            <div class="label">Version</div>
+            <div class="value" id="sys-version">—</div>
+          </div>
+          <div class="stat">
+            <div class="label">Database</div>
+            <div class="value" id="sys-db">—</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Endpoints</h2>
+        <p class="brand-sub" style="margin:.15rem 0 .75rem">These are exposed on the host as fixed ports; the portal itself is on the dynamic BlueOS "Open" port.</p>
+        <ul class="endpoint-list" id="sys-endpoints"></ul>
+      </section>
+
+      <section class="panel">
+        <h2>MQTT topic convention</h2>
+        <p class="brand-sub" style="margin:.15rem 0 .5rem">Boards publish under <code>blueos/&lt;device&gt;/…</code>. Other extensions can use <code>blueos/ext/&lt;name&gt;/…</code>.</p>
+<pre class="topics">ESPHome sensors:  blueos/relay/sensor/…/state
+ESPHome relays:   blueos/relay/switch/relay_1/state  (+ /command)
+Extension metric: blueos/ext/mysensor/temp/state
+Extension JSON:   blueos/ext/mysensor/json
+Steward time:     blueos/ext/site-steward/json</pre>
+      </section>
+    </section>
+
+    <section class="tab-panel" id="panel-graphs" role="tabpanel" aria-labelledby="tab-graphs" hidden>
+      <div class="graphs-header">
+        <h2>Trends over time</h2>
+        <span class="device-meta">History only — use the Controls tab to flip switches</span>
+      </div>
+      <iframe
+        id="grafana-frame"
+        class="grafana-frame graphs-tab-frame"
+        title="Site Steward sensor trends"
+        loading="lazy"
+      ></iframe>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Site Steward · boards talk over the local mailbox · schedules use the ESP clock</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

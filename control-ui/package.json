@@ -1,0 +1,19 @@
+{
+  "name": "blueos-site-steward-portal",
+  "version": "0.1.0",
+  "description": "Site Steward BlueOS extension portal — tabbed Controls / System / Graphs UI backed by the MQTT broker, Grafana, and system status served in one Express app.",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "http-proxy-middleware": "^3.0.3",
+    "mqtt": "^5.10.1",
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
