@@ -7,9 +7,16 @@
   "version": 3,
   "editable": true,
   "timezone": "browser",
-  "time": { "from": "now-6h", "to": "now" },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
   "refresh": "30s",
-  "tags": ["blueos", "esphome", "site-steward"],
+  "tags": [
+    "blueos",
+    "esphome",
+    "site-steward"
+  ],
   "templating": {
     "list": [
       {
@@ -17,14 +24,20 @@
         "label": "ESP board",
         "description": "Second segment of the MQTT topic, e.g. 'logger' for blueos/logger. Populated from whatever is publishing.",
         "type": "query",
-        "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "esphome_influxdb"
+        },
         "query": "SHOW TAG VALUES FROM \"esphome_sensor\" WITH KEY = \"topic\"",
         "regex": "/^blueos\\/([^\\/]+)\\//",
         "includeAll": false,
         "multi": false,
         "refresh": 2,
         "sort": 1,
-        "current": { "text": "logger", "value": "logger" },
+        "current": {
+          "text": "logger",
+          "value": "logger"
+        },
         "options": []
       }
     ]
@@ -35,18 +48,33 @@
       "title": "Temperature",
       "description": "Every sensor on this board whose name contains 'temperature', including an RTC chip's onboard sensor.",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
-      "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "esphome_influxdb"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "celsius",
-          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10
+          }
         },
         "overrides": []
       },
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+          "datasource": {
+            "type": "influxdb",
+            "uid": "esphome_influxdb"
+          },
           "query": "SELECT \"value\" FROM \"esphome_sensor\" WHERE \"topic\" =~ /^blueos\\/$board\\/sensor\\/.*temperature.*\\/state$/ AND $timeFilter GROUP BY \"topic\"",
           "rawQuery": true,
           "resultFormat": "time_series",
@@ -56,7 +84,10 @@
       "transformations": [
         {
           "id": "renameByRegex",
-          "options": { "regex": ".*/sensor/(.*)/state", "renamePattern": "$1" }
+          "options": {
+            "regex": ".*/sensor/(.*)/state",
+            "renamePattern": "$1"
+          }
         }
       ]
     },
@@ -65,20 +96,35 @@
       "title": "Humidity",
       "description": "Every sensor on this board whose name contains 'humidity'.",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
-      "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "esphome_influxdb"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "percent",
           "min": 0,
           "max": 100,
-          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10
+          }
         },
         "overrides": []
       },
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+          "datasource": {
+            "type": "influxdb",
+            "uid": "esphome_influxdb"
+          },
           "query": "SELECT \"value\" FROM \"esphome_sensor\" WHERE \"topic\" =~ /^blueos\\/$board\\/sensor\\/.*humidity.*\\/state$/ AND $timeFilter GROUP BY \"topic\"",
           "rawQuery": true,
           "resultFormat": "time_series",
@@ -88,7 +134,10 @@
       "transformations": [
         {
           "id": "renameByRegex",
-          "options": { "regex": ".*/sensor/(.*)/state", "renamePattern": "$1" }
+          "options": {
+            "regex": ".*/sensor/(.*)/state",
+            "renamePattern": "$1"
+          }
         }
       ]
     },
@@ -97,18 +146,33 @@
       "title": "Illuminance",
       "description": "Every sensor on this board whose name contains 'illuminance', 'lux' or 'ambient_light'.",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
-      "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "esphome_influxdb"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "lux",
-          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10
+          }
         },
         "overrides": []
       },
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+          "datasource": {
+            "type": "influxdb",
+            "uid": "esphome_influxdb"
+          },
           "query": "SELECT \"value\" FROM \"esphome_sensor\" WHERE \"topic\" =~ /^blueos\\/$board\\/sensor\\/.*(illuminance|lux|ambient_light).*\\/state$/ AND $timeFilter GROUP BY \"topic\"",
           "rawQuery": true,
           "resultFormat": "time_series",
@@ -118,7 +182,10 @@
       "transformations": [
         {
           "id": "renameByRegex",
-          "options": { "regex": ".*/sensor/(.*)/state", "renamePattern": "$1" }
+          "options": {
+            "regex": ".*/sensor/(.*)/state",
+            "renamePattern": "$1"
+          }
         }
       ]
     },
@@ -126,18 +193,33 @@
       "id": 13,
       "title": "WiFi signal",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
-      "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "esphome_influxdb"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "dBm",
-          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 10 }
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 10
+          }
         },
         "overrides": []
       },
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+          "datasource": {
+            "type": "influxdb",
+            "uid": "esphome_influxdb"
+          },
           "query": "SELECT \"value\" FROM \"esphome_sensor\" WHERE \"topic\" = 'blueos/$board/sensor/wifi_signal/state' AND $timeFilter",
           "rawQuery": true,
           "resultFormat": "time_series",
@@ -146,91 +228,54 @@
       ]
     },
     {
-      "id": 14,
-      "title": "Other sensors",
-      "description": "Anything numeric this board publishes that the panels above don't already cover — a new sensor lands here automatically, on a shared unitless axis. Give it its own panel if the scale doesn't suit.",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
-      "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "custom": { "drawStyle": "line", "lineWidth": 2, "fillOpacity": 0 }
-        },
-        "overrides": []
-      },
-      "targets": [
-        {
-          "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
-          "query": "SELECT \"value\" FROM \"esphome_sensor\" WHERE \"topic\" =~ /^blueos\\/$board\\/sensor\\/.*\\/state$/ AND \"topic\" !~ /(temperature|humidity|illuminance|lux|ambient_light|wifi_signal|uptime|rtc_epoch)/ AND $timeFilter GROUP BY \"topic\"",
-          "rawQuery": true,
-          "resultFormat": "time_series",
-          "alias": "$tag_topic"
-        }
-      ],
-      "transformations": [
-        {
-          "id": "renameByRegex",
-          "options": { "regex": ".*/sensor/(.*)/state", "renamePattern": "$1" }
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "title": "Switches (history)",
-      "description": "Every switch this board exposes — relays, and anything else like a buzzer. Series identity is the stable ESPHome object id (relay_1, …), so renaming a relay in Site Controls does not break its history.",
-      "type": "state-timeline",
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 24 },
-      "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
-      "options": { "mergeValues": true, "showValue": "auto", "rowHeight": 0.7 },
-      "fieldConfig": {
-        "defaults": {
-          "mappings": [
-            { "type": "value", "options": { "ON": { "color": "green", "index": 0, "text": "ON" }, "OFF": { "color": "red", "index": 1, "text": "OFF" } } }
-          ]
-        },
-        "overrides": []
-      },
-      "targets": [
-        {
-          "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
-          "query": "SELECT \"value\" FROM \"esphome_switch\" WHERE \"topic\" =~ /^blueos\\/$board\\/switch\\/.*\\/state$/ AND $timeFilter GROUP BY \"topic\"",
-          "rawQuery": true,
-          "resultFormat": "time_series",
-          "alias": "$tag_topic"
-        }
-      ],
-      "transformations": [
-        {
-          "id": "renameByRegex",
-          "options": { "regex": ".*/switch/(.*)/state", "renamePattern": "$1" }
-        }
-      ]
-    },
-    {
       "id": 4,
       "title": "Uptime",
       "description": "Board uptime from the ESP uptime sensor (seconds), shown as a human duration.",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 32 },
-      "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 0,
+        "y": 16
+      },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "esphome_influxdb"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "dtdurations",
           "decimals": 0,
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "text", "value": null }] }
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
         },
         "overrides": []
       },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
         "textMode": "auto",
         "colorMode": "none",
         "graphMode": "none"
       },
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+          "datasource": {
+            "type": "influxdb",
+            "uid": "esphome_influxdb"
+          },
           "query": "SELECT last(\"value\") FROM \"esphome_sensor\" WHERE \"topic\" = 'blueos/$board/sensor/uptime/state' AND $timeFilter",
           "rawQuery": true,
           "resultFormat": "time_series",
@@ -243,16 +288,30 @@
       "title": "Device online",
       "description": "Whether this board is currently connected to the site mailbox (online/offline from the device status topic).",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 32 },
-      "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 8,
+        "y": 16
+      },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "esphome_influxdb"
+      },
       "fieldConfig": {
         "defaults": {
           "mappings": [
             {
               "type": "value",
               "options": {
-                "online": { "color": "green", "text": "Online" },
-                "offline": { "color": "red", "text": "Offline" }
+                "online": {
+                  "color": "green",
+                  "text": "Online"
+                },
+                "offline": {
+                  "color": "red",
+                  "text": "Offline"
+                }
               }
             }
           ],
@@ -261,14 +320,23 @@
         "overrides": []
       },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "last", "values": false },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "last",
+          "values": false
+        },
         "textMode": "value",
         "colorMode": "value",
         "graphMode": "none"
       },
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+          "datasource": {
+            "type": "influxdb",
+            "uid": "esphome_influxdb"
+          },
           "query": "SELECT last(\"value\") FROM \"esphome_status\" WHERE \"topic\" = 'blueos/$board/status'",
           "rawQuery": true,
           "resultFormat": "table"
@@ -280,17 +348,39 @@
       "title": "Latest readings",
       "description": "Most recent value of every numeric sensor on this board, whether or not it has a panel above. Units vary by sensor, so the raw number is shown.",
       "type": "stat",
-      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 32 },
-      "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 16,
+        "y": 16
+      },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "esphome_influxdb"
+      },
       "fieldConfig": {
         "defaults": {
           "unit": "short",
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "text", "value": null }] }
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": null
+              }
+            ]
+          }
         },
         "overrides": []
       },
       "options": {
-        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
         "textMode": "value_and_name",
         "colorMode": "none",
         "graphMode": "none",
@@ -298,7 +388,10 @@
       },
       "targets": [
         {
-          "datasource": { "type": "influxdb", "uid": "esphome_influxdb" },
+          "datasource": {
+            "type": "influxdb",
+            "uid": "esphome_influxdb"
+          },
           "query": "SELECT last(\"value\") FROM \"esphome_sensor\" WHERE \"topic\" =~ /^blueos\\/$board\\/sensor\\/.*\\/state$/ AND $timeFilter GROUP BY \"topic\"",
           "rawQuery": true,
           "resultFormat": "time_series",
@@ -308,7 +401,122 @@
       "transformations": [
         {
           "id": "renameByRegex",
-          "options": { "regex": ".*/sensor/(.*)/state", "renamePattern": "$1" }
+          "options": {
+            "regex": ".*/sensor/(.*)/state",
+            "renamePattern": "$1"
+          }
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Other sensors",
+      "description": "Anything numeric this board publishes that the panels above don't already cover — a new sensor lands here automatically, on a shared unitless axis. Empty is normal. Give a sensor its own panel if the shared scale doesn't suit it.",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "esphome_influxdb"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 2,
+            "fillOpacity": 0
+          }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "esphome_influxdb"
+          },
+          "query": "SELECT \"value\" FROM \"esphome_sensor\" WHERE \"topic\" =~ /^blueos\\/$board\\/sensor\\/.*\\/state$/ AND \"topic\" !~ /(temperature|humidity|illuminance|lux|ambient_light|wifi_signal|uptime|rtc_epoch)/ AND $timeFilter GROUP BY \"topic\"",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "$tag_topic"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*/sensor/(.*)/state",
+            "renamePattern": "$1"
+          }
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Switches (history)",
+      "description": "Every switch this board exposes — relays, and anything else like a buzzer. Empty on boards that have none. Series identity is the stable ESPHome object id (relay_1, ...), so renaming a relay in Site Controls does not break its history.",
+      "type": "state-timeline",
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "datasource": {
+        "type": "influxdb",
+        "uid": "esphome_influxdb"
+      },
+      "options": {
+        "mergeValues": true,
+        "showValue": "auto",
+        "rowHeight": 0.7
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "ON": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "ON"
+                },
+                "OFF": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "OFF"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "esphome_influxdb"
+          },
+          "query": "SELECT \"value\" FROM \"esphome_switch\" WHERE \"topic\" =~ /^blueos\\/$board\\/switch\\/.*\\/state$/ AND $timeFilter GROUP BY \"topic\"",
+          "rawQuery": true,
+          "resultFormat": "time_series",
+          "alias": "$tag_topic"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": ".*/switch/(.*)/state",
+            "renamePattern": "$1"
+          }
         }
       ]
     }
